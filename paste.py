@@ -25,15 +25,17 @@ def checa_parametros():
         sys.exit(1)
     return sys.argv[1:3]
 
-def principal(arq1_nome, arq2_nome):
+def principal(arq1_nome, arq2_nome, delimiter=None):
+    if delimiter is None:
+        delimiter = DELIMITADOR
     with open(arq1_nome) as arq1,  open(arq2_nome) as arq2:
         for linha1, linha2 in zip(arq1, arq2):
-            print (linha1.strip("\n"), linha2.strip("\n"), sep=DELIMITADOR)
+            print (linha1.strip("\n"), linha2.strip("\n"), sep=delimiter)
 
 def principal_mesmo():
     checa_delimitador()
     arq1, arq2 = checa_parametros()
-    principal(arq1, arq2)
+    principal(arq1, arq2, DELIMITADOR)
 
 if __name__ == "__main__":
     principal_mesmo()
