@@ -4,6 +4,8 @@ Nós simples - permite a recuperação dos valores
 com slices - 
 """
 
+from itertools import zip_longest
+
 class Node(object):
     def __init__(self, value):
         self.value = value
@@ -62,6 +64,28 @@ class Node(object):
     def add_many(self, items):
         for i in items:
             self.add(i)
+
+    def draw(self):
+        lines = self._draw( center=80)
+        print("\n".join(lines))
+
+    def _draw(self, center):
+        lines = []
+        lines.append(str(self.value).center(center))
+        lines_left = []
+        lines_right = []
+        if self.left:
+            lines_left = self.left._draw(center // 2)
+        if self.right:
+            lines_right = self.right._draw(center // 2)
+        for left, right in zip_longest(lines_left, lines_right):
+            if not left:
+                left = " " * (center // 2)
+            if not right:
+                right = " " * (center // 2)
+            lines.append(left + right)
+        return lines
+
 
 if __name__ == "__main__":
     from urllib.request import urlopen
