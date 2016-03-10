@@ -11,6 +11,7 @@ class Node(object):
         self.value = value
         self.left = None
         self.right = None
+        self.depth = 0
 
     def add(self, value):
         if value > self.value:
@@ -23,6 +24,8 @@ class Node(object):
                 self.left = Node(value)
             else:
                 self.left.add(value)
+        self.depth = max(self.left.depth if self.left else 0,
+                         self.right.depth if self.right else 0           ) + 1
 
     def __contains__(self, value):
         if value == self.value:
@@ -86,6 +89,10 @@ class Node(object):
             lines.append(left + right)
         return lines
 
+    def recurse_depth(self):
+        left = self.left.recurse_depth() if self.left else 0
+        right = self.right.recurse_depth(left ) if self.right else 0
+        return max(left, right) + 1
 
 if __name__ == "__main__":
     from urllib.request import urlopen
