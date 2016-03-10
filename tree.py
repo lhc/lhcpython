@@ -12,6 +12,7 @@ class Node(object):
         self.left = None
         self.right = None
         self.depth = 1
+        self._len = 1
 
     @classmethod
     def from_ordered_list(cls, items):
@@ -22,6 +23,7 @@ class Node(object):
         root.left = cls.from_ordered_list(items[:middle])
         root.right = cls.from_ordered_list(items[middle + 1:])
         root.depth = root._shallow_depth()
+        root._len = len(root.right or []) + len(root.left or []) + 1
         return root
 
     def add(self, value):
@@ -36,6 +38,7 @@ class Node(object):
             else:
                 self.left.add(value)
         self.depth = self._shallow_depth()
+        self._len += 1
 
     def _shallow_depth(self):
         return max(self.left.depth if self.left else 0,
@@ -49,6 +52,9 @@ class Node(object):
         if value > self.value and self.right:
             return value in self.right
         return False
+
+    def __len__(self):
+        return self._len
 
     def __getitem__(self, index):
         if not isinstance(index, slice):
