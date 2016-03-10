@@ -91,7 +91,7 @@ class Node(object):
 
     def recurse_depth(self):
         left = self.left.recurse_depth() if self.left else 0
-        right = self.right.recurse_depth(left ) if self.right else 0
+        right = self.right.recurse_depth() if self.right else 0
         return max(left, right) + 1
 
 if __name__ == "__main__":
