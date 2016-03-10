@@ -5,6 +5,25 @@ com slices -
 """
 
 from itertools import zip_longest
+from collections.abc import Sequence
+
+class ListView(Sequence):
+    def __init__(self, sequence, min_, max_):
+        self.sequence = sequence
+        self.min_ = min_
+        if (max_ or 0) >= len(sequence):
+            max_ = len(sequence)
+        self.max_ = max_
+
+    def __getitem__(self, index):
+        if index < 0:
+            index = len(self) + index
+        if not 0 <= index < len(self):
+            raise IndexError
+        return self.sequence[(self.min_ or 0) + index]
+
+    def __len__(self):
+        return max(0, (self.max_ if not self.max_ is None else len(self.sequence) ) - (self.min_ or 0))
 
 class Node(object):
     def __init__(self, value):
@@ -20,8 +39,9 @@ class Node(object):
             return None
         middle = len(items) // 2
         root = cls(items[len(items) // 2])
-        root.left = cls.from_ordered_list(items[:middle])
-        root.right = cls.from_ordered_list(items[middle + 1:])
+        # import ipdb; ipdb.set_trace()
+        root.left = cls.from_ordered_list(ListView(items, None, middle))
+        root.right = cls.from_ordered_list(ListView(items, middle + 1, None))
         root.depth = root._shallow_depth()
         root._len = len(root.right or []) + len(root.left or []) + 1
         return root
