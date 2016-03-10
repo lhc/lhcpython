@@ -11,7 +11,18 @@ class Node(object):
         self.value = value
         self.left = None
         self.right = None
-        self.depth = 0
+        self.depth = 1
+
+    @classmethod
+    def from_ordered_list(cls, items):
+        if not items:
+            return None
+        middle = len(items) // 2
+        root = cls(items[len(items) // 2])
+        root.left = cls.from_ordered_list(items[:middle])
+        root.right = cls.from_ordered_list(items[middle + 1:])
+        root.depth = root._shallow_depth()
+        return root
 
     def add(self, value):
         if value > self.value:
@@ -24,8 +35,11 @@ class Node(object):
                 self.left = Node(value)
             else:
                 self.left.add(value)
-        self.depth = max(self.left.depth if self.left else 0,
-                         self.right.depth if self.right else 0           ) + 1
+        self.depth = self._shallow_depth()
+
+    def _shallow_depth(self):
+        return max(self.left.depth if self.left else 0,
+                   self.right.depth if self.right else 0) + 1
 
     def __contains__(self, value):
         if value == self.value:
